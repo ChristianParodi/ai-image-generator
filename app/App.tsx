@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react'
+import React, { useState } from 'react'
 import {
     Flex,
     Container,
@@ -8,18 +8,11 @@ import {
     Image,
 } from '@chakra-ui/react'
 import { openai } from "./openai/useOpenai"
-import fs from "fs"
-import http from "https"
 
 function App() {
     const [textValue, setTextValue] = useState("");
     const [btnText, setBtnText] = useState("Generate image");
     const [image, setImage] = useState("");
-
-    const handleTextAreaChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        const inputValue = e.target.value;
-        setTextValue(inputValue);
-    }
 
     const handleBtnClick = async (e: any) => {
         if (textValue !== "") {
@@ -31,8 +24,7 @@ function App() {
                     size: "1024x1024",
                 })
                 const image_url = responseImage.data.data[0].url
-                if (image_url)
-                    setImage(image_url)
+                setImage(image_url as string)
             } catch (err: any) { console.log(err.response.data) }
             setBtnText("Generate image")
         }
@@ -48,7 +40,7 @@ function App() {
                 <Heading>Simple DALL-E image generator</Heading>
                 <Textarea
                     value={textValue}
-                    onChange={handleTextAreaChange}
+                    onChange={(e) => { setTextValue(e.target.value) }}
                     border={"1px solid black"}
                 />
                 <Button
